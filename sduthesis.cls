@@ -44,6 +44,9 @@
 \else
 	\newcommand{\fzbHei}{\heiti}
 \fi
+\ifxetex
+  \setmainfont{Times New Roman}
+\fi
 %------中文支持------
 
 %------行距------
@@ -62,35 +65,31 @@
 
 %------页眉页脚------
 \RequirePackage{fancyhdr}
-%----清除设置----
-\pagestyle{fancyplain}
-\fancyhf{}
-%----清除设置----
+\fancypagestyle{sdubody}{%
+  \fancyhf{}
+  \fancyhead[C]{\zihao{-5}\the\ThesisHeader}
+  \fancyfoot[C]{\zihao{-5}\rmfamily\thepage}
+  \renewcommand{\headrulewidth}{0.8pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
 
-%----页眉划线----
-\newcommand{\makeheadrule}{%
-\makebox[0pt][l]{\rule[.7\baselineskip]{\headwidth}{0.8pt}}%
-\rule[0.85\baselineskip]{\headwidth}{1.5pt}\vskip-.8\baselineskip}
+\fancypagestyle{sdufrontmatter}{%
+  \fancyhf{}
+  \fancyfoot[C]{\zihao{-5}\rmfamily\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
 
+\fancypagestyle{sduempty}{%
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+\pagestyle{sdubody}
 \makeatletter
-\renewcommand{\headrule}{%
-{\if@fancyplain\let\headrulewidth\plainheadrulewidth\fi
-\makeheadrule}}
+\let\ps@plain\ps@sdubody
 \makeatother
-%----页眉划线----
-
-%----眉脚内容----
-% ----------页眉----------
-\pagestyle{fancy}
-\fancyhf{}
-\makeatletter
-\ifSDU@opt@chsstyle
-\chead{\zihao{-5}\the\ThesisHeader}
-\makeatother
-% ----------页脚----------
-\cfoot{--{~\thepage~}--}  % 页码居中显示
-% \fancyfoot[LE,RO]{--{~\thepage~}--}   % 页码居外侧显示
-%----眉脚内容----
 %------页眉页脚------
 
 %------数学支持------
@@ -131,37 +130,30 @@
 \numberwithin{figure}{chapter}
 \numberwithin{table}{chapter}
 %----编号----
-%----不浮动----
+\usepackage{caption}
+\renewcommand{\thefigure}{\thechapter-\arabic{figure}}
+\renewcommand{\thetable}{\thechapter-\arabic{table}}
+\DeclareCaptionFont{sducaptionfont}{\zihao{5}}
+
 \makeatletter
-\usepackage{caption}
-
-% 改变表格编号格式为 "表 1-2"
-\usepackage{caption}
-
-% 修改表格编号格式为 "1-1"（章节-表号）
-\renewcommand{\thetable}{\arabic{section}-\arabic{table}}	
-% 设置表格标题格式：编号和标题之间用空格
 \captionsetup[table]{
   labelsep=space,
   labelfont={bf},
   textfont={bf},
-  font=small
+  font=sducaptionfont
 }
 
 % 自定义 \tabcaption 命令
-\makeatletter
 \newcommand{\tabcaption}{%
   \def\@captype{table}%
   \captionsetup{labelsep=space},%
-
   \caption}
-\makeatother
 
 \captionsetup[figure]{
   labelsep=space,
-  labelfont={bf},
-  textfont={bf},
-  font=small
+  labelfont={normalfont},
+  textfont={normalfont},
+  font=sducaptionfont
 }
 \newcommand{\figcaption}{\def\@captype{figure}\captionsetup{labelsep=space}\caption}
 
@@ -208,26 +200,29 @@
 %------摘要环境------
 \newcommand\enabstractname{ABSTRACT}
 \newcommand\enkeywordsname{Key Words}
-\newcommand\enkeywords[1]{\vspace{1cm}\noindent{\bfseries\zihao{-4}\enkeywordsname: }#1}
+\newcommand\enkeywords[1]{\vspace{1cm}\noindent{\bfseries\zihao{-4}\rmfamily\enkeywordsname: }{\zihao{-4}\rmfamily #1}}
 \newenvironment{enabstract}{%
     \newpage
     \phantomsection
-    \fancyfoot{}
+    \pagestyle{sduempty}
+    \makeatletter\let\ps@plain\ps@sduempty\makeatother
     \vspace*{0.8\baselineskip}
-        \centerline{\zihao{-3}\bfseries\enabstractname}
+        \centerline{\zihao{-2}\bfseries\rmfamily\enabstractname}
     \vspace*{0.5\baselineskip}
 \setlength{\parindent}{2em}
+\zihao{-4}\rmfamily
 }{
     \clearpage 
 }
 
 \newcommand\cnabstractname{摘\hspace{2em}要}
 \newcommand\cnkeywordsname{关键词}
-\newcommand\cnkeywords[1]{\vspace{1cm}\noindent{\bfseries\zihao{-4}\cnkeywordsname: }#1}
+\newcommand\cnkeywords[1]{\vspace{1cm}\noindent{\bfseries\zihao{-4}\heiti\cnkeywordsname：}{\zihao{-4}\songti #1}}
 \newenvironment{cnabstract}{%
     \newpage
     \phantomsection
-    \fancyfoot{}
+    \pagestyle{sduempty}
+    \makeatletter\let\ps@plain\ps@sduempty\makeatother
     \vspace*{0.8\baselineskip}
 	\centerline{\zihao{-2}\heiti\bfseries\cnabstractname} %20150305 ADD%
     \vspace*{0.5\baselineskip}
@@ -373,12 +368,16 @@
 
 \newcommand{\maketableofcontents}{%
     \pagenumbering{Roman}
+    \pagestyle{sdufrontmatter}
+    \makeatletter\let\ps@plain\ps@sdufrontmatter\makeatother
     \tableofcontents
     \ifSDU@opt@double
         \cleardoublepage
     \else
         \clearpage
     \fi
+    \pagestyle{sdubody}
+    \makeatletter\let\ps@plain\ps@sdubody\makeatother
 }
 %------Make------
 \endinput
