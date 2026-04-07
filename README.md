@@ -15,13 +15,6 @@
 章节一级标题字体: 中文一级标题为黑体三号加粗，二级标题为黑体四号加粗，三级及以下标题为黑体小四号加粗；英文一级标题为15pt加粗，二级标题为14pt加粗；三级及以下标题为13pt加粗。
 
 章节一级标题文字: 由原先的第X章改为数字标题
-## 模板参照
-
-在documents文件夹下
-
-- 山大教字[2023]6号关于印发《山东大学本科毕业论文（设计）管理办法》的通知.pdf
-- GBT 7714-2015 信息与文献 参考文献著录规则.pdf
-
 本项目是基于[Shandong-University-Undergraduate-Thesis-Design-Template](https://github.com/KYRIE-LI11/Shandong-University-Undergraduate-Thesis-Design-Template)仓库修改适配的 2026 版山东大学本科毕业论文模板。
 
 ### 联系
