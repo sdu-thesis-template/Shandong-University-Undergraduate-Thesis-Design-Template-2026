@@ -205,7 +205,7 @@
     \newpage
     \phantomsection
     \pagestyle{sduempty}
-    \thispagestyle{sduempty}
+    \makeatletter\let\ps@plain\ps@sduempty\makeatother
     \vspace*{0.8\baselineskip}
         \centerline{\zihao{-2}\bfseries\rmfamily\enabstractname}
     \vspace*{0.5\baselineskip}
@@ -222,7 +222,7 @@
     \newpage
     \phantomsection
     \pagestyle{sduempty}
-    \thispagestyle{sduempty}
+    \makeatletter\let\ps@plain\ps@sduempty\makeatother
     \vspace*{0.8\baselineskip}
 	\centerline{\zihao{-2}\heiti\bfseries\cnabstractname} %20150305 ADD%
     \vspace*{0.5\baselineskip}
