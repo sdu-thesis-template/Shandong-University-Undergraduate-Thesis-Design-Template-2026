@@ -4,17 +4,6 @@
 
 本模板可在overleaf上运行(需要在菜单中选择XeLatex，tex live版本选2024)，若使用本地编译器，<span style="color:red;">引文的编译请使用Biber！</span>
 
-本项目主要改进:
-
-封面字体: （毕业论文（设计）采用山东大学本科毕业论文（设计）统一封面。中文题目用黑体小二号加粗，外文题目用三号黑体字加粗，姓名、学号、学院、年级、指导教师为宋体四号。）
-
-页面设置: （论文（设计）应使用A4纸单面或双面纵向打印，上、下页边距2.5cm，左、右各页边距3.0cm。）
-
-正文部分缩进
-
-章节一级标题字体: 中文一级标题为黑体三号加粗，二级标题为黑体四号加粗，三级及以下标题为黑体小四号加粗；英文一级标题为15pt加粗，二级标题为14pt加粗；三级及以下标题为13pt加粗。
-
-章节一级标题文字: 由原先的第X章改为数字标题
 本项目是基于[Shandong-University-Undergraduate-Thesis-Design-Template](https://github.com/KYRIE-LI11/Shandong-University-Undergraduate-Thesis-Design-Template)仓库修改适配的 2026 版山东大学本科毕业论文模板。
 
 ### 联系
