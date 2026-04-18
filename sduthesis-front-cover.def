@@ -4,6 +4,7 @@
 \newtoks\StuNum		     % 学号
 \newtoks\CThesisType     % 论文类型 中
 \newtoks\Ctitle		     % 中文标题
+\newtoks\CoverCtitle     % 封面中文标题（可单独换行）
 \newtoks\Etitle		     % 英文标题
 \newtoks\Cauthor	     % 作者中文名
 \newtoks\Cmajor		     % 专业
@@ -18,13 +19,13 @@
 \newcommand{\LeftLength}{2.3cm}
 \newcommand{\RightLength}{5.5cm}
 
-\setCJKfamilyfont{kt}[AutoFakeBold = {2.17}]{AR PL KaitiM GB}
-\setCJKfamilyfont{ktGB2312}{楷体_GB2312.ttf}
+% \setCJKfamilyfont{kt}[AutoFakeBold = {2.17}]{AR PL KaitiM GB}
+\setCJKfamilyfont{ktGB2312}{楷体_GB2312.TTF}
 
 
 \newcommand{\Mcs}[1]{\makebox[\LeftLength][s]{{\zihao{3}\CJKfamily{ktGB2312}\bfseries #1}}}
 
-\newcommand{\Mcc}[1]{\makebox[\RightLength][c]{{\zihao{4}\songti #1}}}
+\newcommand{\Mcc}[1]{\makebox[\RightLength][l]{{\zihao{4}\songti #1}}}
 
 \newcommand{\maketitlepage}{%
 	\thispagestyle{empty}
@@ -33,27 +34,23 @@
 		~
 		\vskip 12mm\relax
 
-		{
-			{\includegraphics[width = .5\textwidth]{SDUWords.pdf}}\\[10mm]
-    			{\fontsize{62}{74}\selectfont\scalebox{0.68}{ \fzbHei{}\the\CThesisType}}\\
-		}
-  
-		{
-		
-		                \begin{flushleft}
-		                    {\zihao{3}\songti 论文（设计）题目：}
-		                \end{flushleft}
+			{
+				{\includegraphics[width = .5\textwidth]{SDUWords.pdf}}\\[10mm]
+	    			{\fontsize{62}{74}\selectfont\scalebox{0.68}{ \fzbHei{}\the\CThesisType}}\\
+			}
+	  
+			{
+			
+			                \begin{flushleft}
+			                    {\zihao{3}\songti 论文（设计）题目：}
+			                \end{flushleft}
+			                \vspace{\baselineskip}
+			                
+			                \begin{center}
+			                    {\zihao{-2}\heiti\bfseries \the\CoverCtitle}
+			                \end{center}
 		                
-		                \begin{center}
-		                    {\zihao{-2}\heiti\bfseries \the\Ctitle}
-		                \end{center}
-		                
-		                \begin{center}
-		                    {\zihao{3}\heiti \bfseries \the\Etitle}
-		                \end{center}
-
-            
-		}
+			}
 
 		\vfill
 		{

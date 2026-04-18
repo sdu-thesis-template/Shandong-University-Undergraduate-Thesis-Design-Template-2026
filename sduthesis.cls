@@ -1,4 +1,4 @@
-% !Mode:: "TeX:UTF-8"
+    % !Mode:: "TeX:UTF-8"
 \NeedsTeXFormat{LaTeX2e}[1999/12/01]
 \ProvidesClass{sduthesis}[2015/05/12 v1.0.5 Shandong University Thesis Template for Postgraduate]
 %------解决表格换行问题-------
@@ -51,14 +51,23 @@
 
 %------行距------
 \linespread{1.5}
-\addtolength{\parskip}{.3ex}
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{2em}
+\newlength{\sduchapterbeforeskip}
+\newlength{\sdutitleafterskip}
+\newlength{\sdusectionbeforeskip}
+% 章/节/正文间距。正文页需要与页眉保持更明显的距离，而章节首页标题则单独
+% 通过负的章前距向上补偿，使两种页面的观感都保持合适。
+\setlength{\sduchapterbeforeskip}{-0.75\baselineskip}
+\setlength{\sdutitleafterskip}{0.25\baselineskip}
+\setlength{\sdusectionbeforeskip}{0.25\baselineskip}
 %------行距------
 
 %------页面设置------
 \ifSDU@opt@double
-	\newcommand{\GeoOptions}{left=3cm, right=3cm, top=2.5cm, bottom=2.5cm}
+	\newcommand{\GeoOptions}{left=3cm, right=3cm, top=2cm, bottom=2.5cm}
 \else
-	\newcommand{\GeoOptions}{left=3cm, right=3cm, top=2.5cm, bottom=2.5cm}
+	\newcommand{\GeoOptions}{left=3cm, right=3cm, top=2cm, bottom=2.5cm}
 \fi
 \RequirePackage[\GeoOptions]{geometry}
 %------页面设置------
@@ -67,11 +76,15 @@
 \RequirePackage{fancyhdr}
 \fancypagestyle{sdubody}{%
   \fancyhf{}
-  \fancyhead[C]{\zihao{-5}\the\ThesisHeader}
+  \fancyhead[C]{\zihao{-5}\songti\the\ThesisHeader}
   \fancyfoot[C]{\zihao{-5}\rmfamily\thepage}
-  \renewcommand{\headrulewidth}{0.8pt}
+  \renewcommand{\headrulewidth}{0.5pt}
   \renewcommand{\footrulewidth}{0pt}
 }
+
+% 正文页与页眉之间保留更明显的间距；章节首页通过章前距单独补偿。
+\setlength{\headheight}{14pt}
+\setlength{\headsep}{18pt}
 
 \fancypagestyle{sdufrontmatter}{%
   \fancyhf{}
@@ -100,6 +113,17 @@
 \RequirePackage{amsbsy}
 \RequirePackage{bm}
 \RequirePackage{mathrsfs}
+\ifxetex
+  \RequirePackage{unicode-math}
+  \setmathfont{XITS Math}
+  \setmathfont[range=up/{Latin,latin,num}]{Times New Roman}
+  \setmathfont[range=it/{Latin,latin}]{Times New Roman Italic}
+  \setmathfont[range=bfup/{Latin,latin,num}]{Times New Roman Bold}
+  \setmathfont[range=bfit/{Latin,latin}]{Times New Roman Bold Italic}
+  \setmathfont[range={"0028-"0029,"002B,"002C,"002D,"002E,"002F,"003A,"003B,"003D,"005B-"005D,"007C}]{Times New Roman}
+\else
+  \RequirePackage{newtxmath}
+\fi
 \newcommand*{\me}{\ensuremath{\mathrm{e}}}				%自然对数的底
 \newcommand*{\mi}{\ensuremath{\mathrm{i}}}				%虚数单位
 \newcommand*{\dif}{\ensuremath{\,\mathrm{d}}}			%微分算子
@@ -115,9 +139,64 @@
 
 %------数学支持------
 
+% 收紧公式与上下文之间的垂直间距：默认 10pt+ 再叠加 \linespread{1.5} 会显得过松
+\AtBeginDocument{%
+  \setlength{\abovedisplayskip}{3pt plus 1pt minus 1pt}%
+  \setlength{\belowdisplayskip}{3pt plus 1pt minus 1pt}%
+  \setlength{\abovedisplayshortskip}{1pt plus 1pt minus 0pt}%
+  \setlength{\belowdisplayshortskip}{1pt plus 1pt minus 0pt}%
+}
+
 %------图表支持------
 
 \RequirePackage{graphicx}
+\RequirePackage{float}
+\RequirePackage{tikz}
+\RequirePackage[section]{placeins}
+\setlength{\textfloatsep}{12pt plus 2pt minus 2pt}
+\setlength{\intextsep}{12pt plus 2pt minus 2pt}
+\setlength{\floatsep}{10pt plus 2pt minus 2pt}
+\usetikzlibrary{arrows.meta,calc,fit,positioning}
+\tikzset{
+  thesisbox/.style={
+    draw,
+    thick,
+    rounded corners=4pt,
+    fill=white,
+    align=center,
+    inner sep=6pt
+  },
+  thesisblock/.style={
+    thesisbox,
+    text width=3.2cm,
+    minimum height=2.35cm
+  },
+  thesiswide/.style={
+    thesisbox,
+    text width=6.3cm,
+    minimum height=1.75cm
+  },
+  thesissmall/.style={
+    thesisbox,
+    text width=2.55cm,
+    minimum height=1.15cm
+  },
+  thesisnote/.style={
+    font=\footnotesize,
+    fill=white,
+    inner sep=1.5pt,
+    align=center
+  },
+  thesisflow/.style={-Latex, thick},
+  thesisaxis/.style={->, semithick},
+  thesisgroup/.style={
+    draw,
+    dashed,
+    thick,
+    rounded corners=7pt,
+    inner sep=8pt
+  }
+}
 %----图档搜索路径----
 \graphicspath{{figures/}{figure/}{pictures/}{picture/}{pic/}{pics/}{image/}{images/}}
 %----图档搜索路径----
@@ -133,14 +212,16 @@
 \usepackage{caption}
 \renewcommand{\thefigure}{\thechapter-\arabic{figure}}
 \renewcommand{\thetable}{\thechapter-\arabic{table}}
-\DeclareCaptionFont{sducaptionfont}{\zihao{5}}
+\DeclareCaptionFont{sducaptionfont}{\zihao{5}\songti}
 
 \makeatletter
 \captionsetup[table]{
   labelsep=space,
-  labelfont={bf},
-  textfont={bf},
-  font=sducaptionfont
+  labelfont=normalfont,
+  textfont=normalfont,
+  font=sducaptionfont,
+  justification=centering,
+  singlelinecheck=false
 }
 
 % 自定义 \tabcaption 命令
@@ -151,9 +232,11 @@
 
 \captionsetup[figure]{
   labelsep=space,
-  labelfont={normalfont},
-  textfont={normalfont},
-  font=sducaptionfont
+  labelfont=bf,
+  textfont=bf,
+  font=sducaptionfont,
+  justification=centering,
+  singlelinecheck=false
 }
 \newcommand{\figcaption}{\def\@captype{figure}\captionsetup{labelsep=space}\caption}
 
@@ -163,9 +246,15 @@
 
 %------交叉引用------
 \RequirePackage{hyperref}
-\hypersetup{unicode}
-\hypersetup{colorlinks=true}
-\hypersetup{linkcolor=black}
+\hypersetup{
+  unicode=true,
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black,
+  filecolor=black,
+  pdfborder={0 0 0}
+}
 \makeatletter
 \ifSDU@opt@print
 	\hypersetup{allcolors=black}
@@ -184,7 +273,7 @@
    \leavevmode \bfseries
    \@tempdima #3\relax
    \advance\leftskip \@tempdima \null\nobreak\hskip -\leftskip
-   {\songti\zihao{-4}#4}\normalfont\nobreak
+   {\heiti\bfseries\zihao{-4}#4}\normalfont\nobreak
    \leaders\hbox{$\m@th
       \mkern \@dotsep mu\hbox{.}\mkern \@dotsep
       mu$}\hfill
@@ -192,7 +281,10 @@
    \hb@xt@\@pnumwidth{\hfil\songti\zihao{-4} \normalcolor #5}%
    \par}%
 \fi}
-\renewcommand*\l@chapter{\@dottedtocline{0}{0em}{1.5em}}
+\renewcommand*\l@chapter{\@bfdottedtocline{0}{0em}{1.0em}}
+\renewcommand*\l@section{\@dottedtocline{1}{1.5em}{1.0em}}
+\renewcommand*\l@subsection{\@dottedtocline{2}{3.0em}{1.0em}}
+\renewcommand*\l@subsubsection{\@dottedtocline{3}{5.2em}{1.0em}}
 \makeatother
 
 %--------目录-------------
@@ -200,15 +292,18 @@
 %------摘要环境------
 \newcommand\enabstractname{ABSTRACT}
 \newcommand\enkeywordsname{Key Words}
-\newcommand\enkeywords[1]{\vspace{1cm}\noindent{\bfseries\zihao{-4}\rmfamily\enkeywordsname: }{\zihao{-4}\rmfamily #1}}
+\newcommand\enkeywords[1]{%
+  \par\vspace{\sdutitleafterskip}%
+  \noindent{\bfseries\zihao{-4}\rmfamily\enkeywordsname: }{\zihao{-4}\rmfamily #1}%
+}
 \newenvironment{enabstract}{%
     \newpage
     \phantomsection
     \pagestyle{sduempty}
     \thispagestyle{sduempty}
-    \vspace*{0.8\baselineskip}
+    \vspace*{\sduchapterbeforeskip}
         \centerline{\zihao{-2}\bfseries\rmfamily\enabstractname}
-    \vspace*{0.5\baselineskip}
+    \vspace*{\sdutitleafterskip}
 \setlength{\parindent}{2em}
 \zihao{-4}\rmfamily
 }{
@@ -216,18 +311,21 @@
 }
 
 \newcommand\cnabstractname{摘\hspace{2em}要}
-\newcommand\cnkeywordsname{关键词}
-\newcommand\cnkeywords[1]{\vspace{1cm}\noindent{\bfseries\zihao{-4}\heiti\cnkeywordsname：}{\zihao{-4}\songti #1}}
+\newcommand\cnkeywordsname{关键字}
+\newcommand\cnkeywords[1]{%
+  \par\vspace{\sdutitleafterskip}%
+  \noindent{\bfseries\zihao{-4}\heiti\cnkeywordsname：}{\zihao{-4}\songti #1}%
+}
 \newenvironment{cnabstract}{%
     \newpage
     \phantomsection
     \pagestyle{sduempty}
     \thispagestyle{sduempty}
-    \vspace*{0.8\baselineskip}
-	\centerline{\zihao{-2}\heiti\bfseries\cnabstractname} %20150305 ADD%
-    \vspace*{0.5\baselineskip}
-	\setlength{\parindent}{2em}
-	\zihao{-4}\songti
+    \vspace*{\sduchapterbeforeskip}
+		\centerline{\zihao{-2}\heiti\bfseries\cnabstractname} %20150305 ADD%
+    \vspace*{\sdutitleafterskip}
+		\setlength{\parindent}{2em}
+		\zihao{-4}\songti
 }{
     \clearpage
 }
@@ -252,14 +350,36 @@
 % \ctexset{
 %   bibname = {\centering\zihao{-2}\heiti\bfseries 参考文献},
 % }
-\usepackage[backend=biber, style=gb7714-2015, gbpub=false, doi=false]{biblatex}
+\usepackage[backend=biber, style=gb7714-2015, sorting=none, sortcites=true, gbpub=false, doi=false, url=true]{biblatex}
 \addbibresource[location=local]{contents/reference.bib}
+\AtEveryBibitem{\clearfield{eprintclass}}
+\newrobustcmd{\mkbibbracketsuperscript}[1]{\mkbibsuperscript{\mkbibbrackets{#1}}}
+\DeclareCiteCommand{\supercite}[\mkbibbracketsuperscript]
+  {\usebibmacro{cite:init}%
+   \let\multicitedelim=\supercitedelim
+   \let\multicitesubentrydelim=\supercitesubentrydelim
+   \let\multiciterangedelim=\superciterangedelim
+   \let\multicitesubentryrangedelim=\supercitesubentryrangedelim
+   \iffieldundef{prenote}
+     {}
+     {\BibliographyWarning{Ignoring prenote argument}}%
+   \iffieldundef{postnote}
+     {}
+     {\BibliographyWarning{Ignoring postnote argument}}}
+  {\usebibmacro{citeindex}%
+   \printtext[bibhyperref]{\usebibmacro{cite:comp}}}
+  {}
+  {\usebibmacro{cite:dump}}
 \defbibheading{myheading}[参考文献]{%
-  \chapter*{\centering\bfseries\heiti\zihao{-2}#1}
+  \clearpage
+  \phantomsection
+  \vspace*{\sduchapterbeforeskip}
+  \centerline{\centering\bfseries\heiti\zihao{-2}#1}
+  \vspace*{\sdutitleafterskip}
   \addcontentsline{toc}{chapter}{#1}
   {\zihao{5}\selectfont}
 }
-\AtBeginBibliography{\zihao{5}\linespread{1}\selectfont}
+\AtBeginBibliography{\zihao{5}\songti\linespread{1}\selectfont}
 %--reference
 
 %--chapter
@@ -276,9 +396,9 @@
     \CTEXsetup[format={\centering}]{chapter}%这一行将章节标题设置为 居中 格式，即使标题内容在正文中，也会居中显示。
     \CTEXsetup[nameformat={\heiti\bfseries\zihao{3}}]{chapter}%这一行设置章节标题编号（如“第1章”）的样式：
     \CTEXsetup[titleformat={\heiti\bfseries\zihao{3}}]{chapter}%这一行设置章节标题名称部分的格式（即“绪论”等内容）：\bfseries：使章节标题内容加粗。\zihao{3}：设置字号为三号字。
-    \CTEXsetup[aftername={\quad{}}]{chapter}%这一行在章节编号和章节标题之间插入一个空格（\quad 是 LaTeX 中的一种水平空格命令，大小是普通空格的两倍）。这意味着章节编号和标题之间会有适当的间隔。
-    \CTEXsetup[beforeskip={0.8\baselineskip}]{chapter}%这一行设置章节标题前的垂直间距为 0.8 倍行距。
-    \CTEXsetup[afterskip={0.5\baselineskip}]{chapter}%这一行设置章节标题后的垂直间距为 0.5 倍行距。
+    \CTEXsetup[aftername={\hspace{0.5em}}]{chapter}%这一行在章节编号和章节标题之间插入一个空格（\quad 是 LaTeX 中的一种水平空格命令，大小是普通空格的两倍）。这意味着章节编号和标题之间会有适当的间隔。
+    \CTEXsetup[beforeskip={\sduchapterbeforeskip}]{chapter}%这一行设置章节标题前的垂直间距为 0.8 行。
+    \CTEXsetup[afterskip={\sdutitleafterskip}]{chapter}%这一行设置章节标题后的垂直间距为 0.5 行。
 
 %\begin{comment}
 %    \CTEXsetup[name={第,章}]{chapter}
@@ -292,21 +412,23 @@
 %\end{comment}
 
 %--section
+\CTEXsetup[aftername={\hspace{0.5em}}]{section}
 % \CTEXsetup[name={$\S$\,,}]{section} % 去掉章节前的双S花符号
-\CTEXsetup[format={\bfseries\flushleft\zihao{4}}]{section}
-\CTEXsetup[beforeskip={0.5\baselineskip}]{section}%节标题前的垂直间距为0.5倍行距
-\CTEXsetup[afterskip={0.5\baselineskip}]{section} % 节标题后的垂直间距为0.5倍行距
+\CTEXsetup[format={\heiti\bfseries\flushleft\zihao{4}}]{section}
+\CTEXsetup[beforeskip={\sdusectionbeforeskip}]{section}%节标题前的垂直间距为0.5行
+\CTEXsetup[afterskip={\sdutitleafterskip}]{section} % 节标题后的垂直间距为0.5行
 
 % 设置节标题的前后间距
-\CTEXsetup[beforeskip={0.5\baselineskip}]{subsection} % 节标题前的垂直间距为0.5倍行距
-\CTEXsetup[afterskip={0.5\baselineskip}]{subsection} % 节标题后的垂直间距为0.5倍行距
-\CTEXsetup[beforeskip={0.5\baselineskip}]{subsubsection} % 节标题前的垂直间距为0.5倍行距
-\CTEXsetup[afterskip={0.5\baselineskip}]{subsubsection} % 节标题后的垂直间距为0.5倍行距
+\CTEXsetup[beforeskip={\sdusectionbeforeskip}]{subsection} % 节标题前的垂直间距为0.5行
+\CTEXsetup[afterskip={\sdutitleafterskip}]{subsection} % 节标题后的垂直间距为0.5行
+\CTEXsetup[beforeskip={\sdusectionbeforeskip}]{subsubsection} % 节标题前的垂直间距为0.5行
+\CTEXsetup[afterskip={\sdutitleafterskip}]{subsubsection} % 节标题后的垂直间距为0.5行
 
 %--subsection
-\CTEXsetup[format={\bfseries\flushleft\zihao{-4}}]{subsection}
+\CTEXsetup[aftername={\hspace{0.5em}}]{subsection}
+\CTEXsetup[format={\heiti\bfseries\flushleft\zihao{-4}}]{subsection}
 %--subsubsection
-\CTEXsetup[format={\flushleft\zihao{-4}}]{subsubsection}
+\CTEXsetup[format={\heiti\bfseries\flushleft\zihao{-4}}]{subsubsection}
 %--appendix
 \newcommand{\startappendices}{  
   \appendix  
@@ -315,8 +437,8 @@
   \CTEXsetup[  
     name={附录~,},  
     number=\thechapter,  
-    beforeskip=0.8\baselineskip plus .2ex minus .2ex,  
-    afterskip=0.5\baselineskip plus .2ex, 
+    beforeskip=\sduchapterbeforeskip,  
+    afterskip=\sdutitleafterskip,
     indent=1em,  
     format={\centering\zihao{-2}\heiti\bfseries}  
   ]{chapter}  
@@ -327,10 +449,10 @@
 {
     \clearpage
     \phantomsection	
-    \vspace*{0.8\baselineskip}
-	\centerline{\zihao{-2}\heiti\bfseries{致\hspace{2em}谢}} %20150305 ADD%
-    \vspace*{0.5\baselineskip}
-	\addcontentsline{toc}{chapter}{致\quad{}谢} %使目录中以章级别显示“致谢”
+    \vspace*{\sduchapterbeforeskip}
+		\centerline{\zihao{-2}\heiti\bfseries{致\hspace{2em}谢}} %20150305 ADD%
+    \vspace*{\sdutitleafterskip}
+		\addcontentsline{toc}{chapter}{致\protect\hspace{2em}谢} %使目录中以章级别显示“致谢”
 	\addcontentsline{toe}{chapter}{Acknowledgement}
     \setlength{\parindent}{2em}
 	\zihao{-4}\songti
