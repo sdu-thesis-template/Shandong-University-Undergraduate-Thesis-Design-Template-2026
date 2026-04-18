@@ -23,22 +23,26 @@
 % 正文部分使用阿拉伯数字页码
 \pagenumbering{arabic}
 \setcounter{page}{1}
+\zihao{-4}\songti
 
 \input{contents/ch1.tex}
 \input{contents/ch2.tex}
 \input{contents/ch3.tex}
+\input{contents/ch4.tex}
+\input{contents/ch5.tex}
 % \input{contents/help.tex}
-\input{contents/conclusions.tex}
+\input{contents/ch6.tex}
 
 % 参考文献
+\nocite{*}
 \printbibliography[heading=myheading]
 
 % 致谢及其他
 \input{contents/acknowledgement.tex}
 
 % 附录
-\startappendices
-\input{contents/appendix.tex}
+% \startappendices
+% \input{contents/appendix.tex}
 % \input{contents/translation.tex}
 
 \end{document}
